@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-procesoptimalisatie voor non-profits en overheid | Statik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --geel: #FECE00;
+    --blauw: #005C98;
+    --lichtblauw: #ACE3FE;
+    --groen: #29AE81;
+    --koraal: #FE8F71;
+    --roodoranje: #FE3000;
+    --tekst: #333333;
+    --grijs: #F9F9F9;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Jost', sans-serif; color: var(--tekst); background: #fff; line-height: 1.6; font-size: 1.0625rem; }
+  h1, h2, h3 { font-weight: 400; line-height: 1.15; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.125rem); margin-bottom: 1rem; }
+  h2 { font-size: clamp(1.6rem, 3.5vw, 2.1875rem); margin-bottom: 1.25rem; }
+  h3 { font-size: 1.25rem; font-weight: 500; margin-bottom: .5rem; }
+  p { margin-bottom: 1rem; }
+  a { color: var(--blauw); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+  .smal { max-width: 720px; }
+
+  .btn { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.625rem; border-radius: 9999px; border: 1px solid #000; padding: .5rem 1.5rem; font-size: 1rem; font-weight: 600; letter-spacing: .025em; text-decoration: none; transition: all .2s ease-in-out; cursor: pointer; }
+  .btn--primary { background: #000; color: #fff; }
+  .btn--primary:hover { background: var(--geel); color: #000; border-color: var(--geel); }
+  .btn--ghost { background: transparent; color: #000; }
+  .btn--ghost:hover { background: #000; color: #fff; }
+
+  header { position: sticky; top: 0; background: #fff; z-index: 50; border-bottom: 1px solid #eee; }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; max-width: 1240px; margin: 0 auto; }
+  .logo { font-weight: 600; font-size: 1.5rem; color: #000; text-decoration: none; letter-spacing: -.02em; }
+  .logo span { color: var(--roodoranje); }
+  .menu { display: flex; gap: 1.75rem; align-items: center; list-style: none; }
+  .menu a { color: var(--tekst); text-decoration: none; font-size: 1rem; }
+  .menu a:hover { color: #000; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--geel); text-decoration-thickness: 3px; }
+  @media (max-width: 820px) { .menu li:not(:last-child) { display: none; } }
+
+  .hero { padding: 5rem 0 4rem; }
+  .hero .kicker { font-size: .95rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--blauw); margin-bottom: 1rem; }
+  .hero .sub { display: inline; font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 500; background: linear-gradient(transparent 55%, var(--geel) 55%, var(--geel) 92%, transparent 92%); padding: 0 .15em; }
+  .hero .intro { margin-top: 1.75rem; max-width: 640px; font-size: 1.125rem; }
+  .hero-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 3rem; align-items: center; }
+  @media (max-width: 820px) { .hero-grid { grid-template-columns: 1fr; } }
+  .hero-visual { position: relative; display: flex; justify-content: center; }
+  .hero-visual img.illu { width: 100%; max-width: 420px; height: auto; position: relative; z-index: 1; }
+  .excel-stapel { position: relative; }
+  .excel-kaart { background: #fff; border: 1px solid #e5e7eb; border-radius: .5rem; padding: 1rem 1.25rem; font-size: .9rem; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
+  .excel-kaart .bestandsnaam { font-weight: 600; display: flex; align-items: center; gap: .5rem; }
+  .excel-kaart .groen-blok { width: 18px; height: 18px; background: #1D6F42; border-radius: 3px; flex: none; }
+  .excel-kaart .meta { color: #888; font-size: .8rem; margin-top: .25rem; }
+  .excel-kaart + .excel-kaart { margin-top: .75rem; }
+  .ornament { position: absolute; pointer-events: none; z-index: 0; }
+  .logo-strip { padding: 2.5rem 0 3rem; }
+  .logo-strip p { font-size: .9rem; text-transform: uppercase; letter-spacing: .08em; color: #888; margin-bottom: 1.25rem; }
+  .logo-strip .logos { display: flex; gap: 3rem; align-items: center; flex-wrap: wrap; }
+  .logo-strip img { height: 44px; width: auto; max-width: 130px; object-fit: contain; filter: grayscale(1); opacity: .65; }
+  .sectie-illu { display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; align-items: center; }
+  @media (max-width: 820px) { .sectie-illu { grid-template-columns: 1fr; } .sectie-illu .illu-kolom { display: none; } }
+  .illu-kolom img { width: 100%; max-width: 300px; height: auto; }
+
+  section { padding: 4.5rem 0; }
+  .sectie-grijs { background: var(--grijs); }
+  .sectie-blauw { background: var(--lichtblauw); }
+  .sectie-zwart { background: #000; color: #fff; }
+  .sectie-zwart h2 { color: #fff; }
+
+  .kaarten { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+  .kaart { background: #fff; border-radius: 1rem; padding: 1.75rem; border: 1px solid #eee; }
+  .kaart h3 { display: flex; align-items: center; gap: .6rem; }
+  .stip { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+  .afsluiter { margin-top: 2.25rem; font-size: 1.125rem; }
+
+  .twee-kolom { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
+  @media (max-width: 820px) { .twee-kolom { grid-template-columns: 1fr; } }
+
+  .bewijs { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+  @media (max-width: 820px) { .bewijs { grid-template-columns: 1fr; } }
+  .bewijs .cijfer { font-size: 3rem; font-weight: 500; line-height: 1; }
+  .bewijs .cijfer-label { font-size: .95rem; color: #555; }
+  .cijfers { display: flex; gap: 2.5rem; margin: 1.5rem 0; }
+  .schermafdruk { background: #fff; border-radius: .75rem; border: 1px solid #ddd; overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,.10); }
+  .schermafdruk .balk { background: #f3f4f6; padding: .5rem .9rem; display: flex; gap: .4rem; border-bottom: 1px solid #e5e7eb; }
+  .schermafdruk .balk i { width: 10px; height: 10px; border-radius: 50%; background: #d1d5db; display: block; }
+  .schermafdruk .inhoud { padding: 1.25rem; font-size: .85rem; }
+  .veld { border: 1px solid #d1d5db; border-radius: .35rem; padding: .45rem .6rem; margin-bottom: .6rem; color: #666; display: flex; justify-content: space-between; }
+  .veld.fout { border-color: var(--roodoranje); background: #fff5f2; color: var(--roodoranje); }
+  .veld.ok { border-color: var(--groen); }
+  .veld .vink { color: var(--groen); font-weight: 600; }
+
+  .stappen { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+  .stap { background: #fff; border-radius: 1rem; padding: 1.75rem; border: 1px solid #eee; position: relative; }
+  .stap .nr { width: 2.25rem; height: 2.25rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; margin-bottom: 1rem; background: var(--grijs); }
+  .stap.dag1 { background: #FFF8DC; border-color: var(--geel); }
+  .stap.dag1 .nr { background: var(--geel); }
+  .stap .label-dag1 { position: absolute; top: -0.8rem; right: 1.25rem; background: var(--geel); font-size: .78rem; font-weight: 600; padding: .15rem .7rem; border-radius: 9999px; }
+  .stap-naschrift { margin-top: 2rem; color: #555; }
+
+  .ai-blokken { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+  .ai-blok { border-radius: 1rem; padding: 1.75rem; }
+  .ai-blok:nth-child(1) { background: var(--lichtblauw); }
+  .ai-blok:nth-child(2) { background: #DFF5EC; }
+  .ai-blok:nth-child(3) { background: #FFE9E0; }
+
+  .veilig { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; margin-top: 2rem; }
+
+  .verbinding { border: 2px solid #000; border-radius: 1rem; padding: 2rem 2.25rem; display: flex; gap: 2rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .verbinding p { margin: 0; max-width: 620px; }
+
+  .dag-lijst { list-style: none; margin: 1.5rem 0; }
+  .dag-lijst li { padding: 1rem 0 1rem 2.2rem; position: relative; border-bottom: 1px dashed #ddd; }
+  .dag-lijst li:before { content: ""; position: absolute; left: 0; top: 1.35rem; width: 12px; height: 12px; border-radius: 50%; background: var(--geel); }
+  .dag-lijst li strong { font-weight: 600; }
+
+  .cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+  .case { background: #fff; border-radius: 1rem; border: 1px solid #eee; padding: 1.75rem; display: flex; flex-direction: column; }
+  .case .tag { font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--blauw); margin-bottom: .6rem; }
+  .case a { margin-top: auto; font-weight: 600; text-decoration: none; }
+  .case a:hover { text-decoration: underline; text-decoration-color: var(--geel); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+  .case.placeholder { background: var(--grijs); color: #777; border-style: dashed; }
+
+  .quote { padding: .5rem 0 .5rem 0; font-size: 1.35rem; font-style: italic; max-width: 760px; margin: 3rem auto 0; position: relative; }
+  .quote:before { content: ""; display: block; width: 56px; height: 42px; background: url('assets/quotes-red.svg') no-repeat center / contain; margin-bottom: 1rem; }
+  .quote .bron { display: block; font-size: .95rem; font-style: normal; color: #555; margin-top: .75rem; }
+
+  .slot { text-align: center; padding: 5.5rem 0; }
+  .slot h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+  .slot p { max-width: 620px; margin: 0 auto 2rem; font-size: 1.125rem; }
+  .slot .btn--primary { background: var(--geel); color: #000; border-color: var(--geel); }
+  .slot .btn--primary:hover { background: #fff; border-color: #fff; }
+
+  footer { background: #fff; border-top: 1px solid #eee; padding: 2.5rem 0; font-size: .95rem; color: #777; }
+  .footer-grid { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a class="logo" href="#" aria-label="Statik"><img src="assets/statik-logo.svg" alt="Statik" style="height:34px; width:auto; display:block;"></a>
+    <ul class="menu">
+      <li><a href="#">Wat doen we</a></li>
+      <li><a href="#">Ons werk</a></li>
+      <li><a href="#">Ons verhaal</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a class="btn btn--ghost" href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero" style="position:relative; overflow:hidden;">
+  <img class="ornament" src="assets/overview-ornament-tl.svg" alt="" style="top:-120px; left:-140px; width:300px; opacity:.9;">
+  <div class="wrap hero-grid" style="position:relative; z-index:1;">
+    <div>
+      <p class="kicker">Wat doen we &rsaquo; AI-procesoptimalisatie</p>
+      <h1>AI-procesoptimalisatie</h1>
+      <p><span class="sub">AI schrijft hier geen gedichten. Het lost je rommeligste Excel op.</span></p>
+      <div class="intro">
+        <p>Overal hoor je wat AI allemaal kan. Maar voor een welzijnsorganisatie, een cultuurhuis of een lokaal bestuur blijft het vaak abstract: chatbots, gegenereerde beelden, grote beloftes. Wat betekent het nu écht voor jouw werking?</p>
+        <p>Dit: de processen die altijd te klein waren voor een IT-project, zijn dankzij AI plots oplosbaar. De onkostennota's van vrijwilligers. Het subsidiedossier dat in zeven versies rondgaat. De inschrijvingen die iemand drie keer overtikt. En je hoeft ons niet te geloven op een mooie slide: na één dag samenwerken zie je een eerste werkende versie.</p>
+        <a class="btn btn--primary" href="#contact">Laten we samenwerken</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img class="illu" src="assets/Meisje-aan-laptop.svg" alt="Statik-illustratie van iemand die aan een laptop werkt">
+    </div>
+  </div>
+</section>
+
+<div class="wrap logo-strip">
+  <p>Al meer dan twintig jaar aan het werk voor onder andere</p>
+  <div class="logos">
+    <img src="assets/logo-tele-onthaal.png" alt="Tele-Onthaal">
+    <img src="assets/logo_ucll_rgb.png" alt="UCLL">
+    <img src="assets/publiq.svg" alt="publiq">
+    <img src="assets/logo.-Gezond-Leven.svg" alt="Gezond Leven">
+    <img src="assets/Okra.png" alt="Okra">
+    <img src="assets/koning-boudewijnstichting-vector-logo.png" alt="Koning Boudewijnstichting">
+  </div>
+</div>
+
+<section class="sectie-grijs">
+  <div class="wrap twee-kolom">
+    <div>
+      <h2>Waarom dit altijd bleef liggen</h2>
+      <p>Niemand laat zo'n proces uit luiheid aanmodderen. Het bleef liggen omdat het niet anders kon. Standaardsoftware past nooit helemaal: elke werking heeft regels en uitzonderingen waar geen pakket rekening mee houdt. En maatwerk liet je bouwen voor je kernsystemen, niet voor de onkostennota's van vrijwilligers. Wie er toch ooit een offerte voor vroeg, schrok van het bedrag en deed de lade weer dicht.</p>
+      <p>Dus werd het Excel. Jarenlang was dat gewoon de redelijke keuze, en al die jaren heeft iemand in jouw organisatie dat met veel geduld gedragen.</p>
+      <div class="excel-stapel" aria-hidden="true">
+        <div class="excel-kaart">
+          <div class="bestandsnaam"><span class="groen-blok"></span>vergoedingen_2026_v7_DEFINITIEF.xlsx</div>
+          <div class="meta">Laatst bewerkt door Marc · 14 tabbladen · 3 verborgen kolommen</div>
+        </div>
+        <div class="excel-kaart">
+          <div class="bestandsnaam"><span class="groen-blok"></span>subsidiedossier_2026_finaal_echt.xlsx</div>
+          <div class="meta">Deadline over 12 dagen · cijfers uit 4 andere bestanden</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2>Wat AI hier echt doet</h2>
+      <p>Software bouwen is de voorbije jaren fundamenteel versneld. Met AI als krachtig gereedschap in de werkplaats doen onze makers nu in dagen wat vroeger maanden vroeg. Voor jouw kleine processen betekent dat iets belangrijks: voor het eerst is software op maat ook daar haalbaar. <strong>De categorie "te klein om op te lossen" bestaat niet meer.</strong></p>
+      <p>Het moeilijkste deel is daarmee niet verdwenen, en daar maken wij het verschil: jouw proces écht begrijpen. De regel die nergens gedocumenteerd staat. De reden waarom kolom F soms leeg is. Daarom beginnen we nooit bij technologie, altijd bij de mensen die het proces elke dag dragen. Hoe meer uitzonderingen jouw proces heeft, hoe meer het ons werk is.</p>
+      <p>En elk uur dat zo vrijkomt, gaat terug naar waar je mensen voor gekozen hebben: leden, bezoekers, studenten, burgers.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Herken je dit?</h2>
+    <p class="smal">Geen grote IT-projecten, wel de processen waar je mensen elke week tijd aan verliezen. Een greep uit wat we tegenkomen:</p>
+    <div class="kaarten">
+      <div class="kaart"><h3><span class="stip" style="background:var(--geel)"></span>Vergoedingen en onkosten</h3><p>Vrijwilligers of leden dienen kosten in via Excel, elk op een eigen manier. Iemand controleert alles met de hand en telt bedragen na. Eén formulier dat zichzelf controleert houdt fouten tegen voor ze vertrekken. Wat binnenkomt, klopt.</p></div>
+      <div class="kaart"><h3><span class="stip" style="background:var(--blauw)"></span>Subsidiedossiers en verantwoording</h3><p>Stukken verzamelen bij collega's, deadlines bewaken, dezelfde cijfers in drie sjablonen overtikken. Eén plek waar het dossier zichzelf opbouwt doorheen het jaar, zodat de deadline geen sprint meer is.</p></div>
+      <div class="kaart"><h3><span class="stip" style="background:var(--koraal)"></span>Inschrijvingen en onboarding</h3><p>Van inschrijfformulier tot bevestigingsmail tot deelnemerslijst tot facturatie: vier systemen, vier keer overtikken. Eén doorlopende flow, met een mens aan het stuur waar dat telt.</p></div>
+      <div class="kaart"><h3><span class="stip" style="background:var(--groen)"></span>Verdelingen en planning</h3><p>Stageplaatsen verdelen, deelnemers indelen in groepen, lokalen toewijzen. Puzzels die nu dagen kosten en discussies opleveren. Tools die de puzzel leggen volgens jullie regels, en laten zien waarom elke keuze gemaakt is.</p></div>
+      <div class="kaart"><h3><span class="stip" style="background:var(--lichtblauw)"></span>Documentverwerking</h3><p>Attesten, facturen, aanvragen die binnenkomen als pdf of foto. Software doet het sorteerwerk: classificeren, gegevens eruit halen en bij de juiste persoon krijgen. Een mens bevestigt, de stapel verdwijnt.</p></div>
+      <div class="kaart"><h3><span class="stip" style="background:var(--roodoranje)"></span>Koppelingen tussen systemen</h3><p>Jullie boekhoudpakket, ledenbestand en kalender praten niet met elkaar, dus doet een collega het. Wij bouwen de bruggen, zodat gegevens één keer worden ingevoerd en overal kloppen.</p></div>
+    </div>
+    <p class="afsluiter">Staat jouw proces er niet tussen? <strong>Stuur ons gerust je rommeligste Excel.</strong> We vertellen je eerlijk of het oplosbaar is.</p>
+  </div>
+</section>
+
+
+
+<section class="sectie-blauw">
+  <div class="wrap">
+    <div class="bewijs">
+      <div>
+        <h2>Kijk maar: van 500 Excels naar één formulier</h2>
+        <p>Bij de Centrale Toezichtsraad voor het Gevangeniswezen dienen 500 vrijwilligers in 37 commissies elk kwartaal hun zitpenningen en reiskosten in via Excel. Elk op een eigen manier, dus controleerde een jurist alles met de hand.</p>
+        <div class="cijfers">
+          <div><div class="cijfer">500</div><div class="cijfer-label">Excels per kwartaal</div></div>
+          <div><div class="cijfer">8</div><div class="cijfer-label">werkdagen handwerk</div></div>
+          <div><div class="cijfer">1</div><div class="cijfer-label">workshopdag tot prototype</div></div>
+        </div>
+        <p>Op één workshopdag brachten we samen het hele proces in kaart, en stond er 's avonds een werkend prototype van een formulier dat fouten tegenhoudt voor ze vertrekken.</p>
+        <a class="btn btn--primary" href="#">Lees de hele case</a>
+      </div>
+      <div class="schermafdruk" aria-hidden="true">
+        <div class="balk"><i></i><i></i><i></i></div>
+        <div class="inhoud">
+          <p style="font-weight:600; margin-bottom:.75rem;">Kostenformulier zitpenningen · Q1</p>
+          <div class="veld ok">Naam en commissie <span class="vink">&#10003;</span></div>
+          <div class="veld ok">Zitpenningen: 2 vergaderingen <span class="vink">&#10003;</span></div>
+          <div class="veld fout">Reiskosten: datum ontbreekt</div>
+          <div class="veld">Verklaring op eer</div>
+          <p style="margin:0; color:#888;">Indienen kan pas als alles klopt.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Na dag één zie je al iets werken</h2>
+    <p class="smal">Geen maandenlange analysefase en geen rapport dat in een lade belandt. We tonen liever dan we beloven, vanaf de eerste dag.</p>
+    <div class="stappen">
+      <div class="stap dag1"><span class="label-dag1">dag één</span><div class="nr">1</div><h3>Samen het proces doorgronden</h3><p>Vooraf vragen we je formulieren, regels en voorbeelden op. Op de workshopdag brengen we met de mensen die het proces dragen de hele flow in kaart: elke stap, elke uitzondering. Vaak voor de organisatie zelf al een eyeopener.</p></div>
+      <div class="stap dag1"><span class="label-dag1">dag één</span><div class="nr">2</div><h3>Een werkend prototype, dezelfde dag</h3><p>'s Namiddags tonen we een eerste werkende versie, met jullie regels erin. Klikbaar, testbaar, echt. Wat niet klopt, komt nu boven, niet na drie maanden bouwen.</p></div>
+      <div class="stap"><div class="nr">3</div><h3>Testen bij echte mensen</h3><p>We testen bij de echte eindgebruikers: de vrijwilliger van 67 die alles op een tablet doet, de collega die het formulier elke week verwerkt. Toegankelijkheid is een vertrekpunt, geen extraatje.</p></div>
+      <div class="stap"><div class="nr">4</div><h3>Overdragen, en in de buurt blijven</h3><p>Live. Gebouwd. Met documentatie en opleiding, en de code, data en kennis zijn van jullie. Daarna kiezen jullie: op eigen kracht verder, of met ons als vaste partner in de buurt. Allebei prima.</p></div>
+    </div>
+    <p class="stap-naschrift">Wat het wordt? Meestal een slim formulier, een verdeel- of planningstool, een documentstroom, een koppeling tussen bestaande systemen of een helder dashboard. Maar eerlijk: dat bepalen we samen op die eerste dag, niet in een brochure.</p>
+  </div>
+</section>
+
+<section class="sectie-grijs">
+  <div class="wrap">
+    <h2>Waar zit de AI, en waar niet</h2>
+    <p class="smal">Overal lees je over AI-agents die organisaties zullen overnemen. Dat is ons verhaal niet. Wij zoeken, zoals altijd, het evenwicht tussen mensen en technologie. AI heeft bij ons twee duidelijke rollen, en één duidelijke grens.</p>
+    <div class="ai-blokken">
+      <div class="ai-blok"><h3>AI versnelt het bouwen</h3><p>Onze makers werken met AI zoals een meubelmaker met goed gereedschap: het werk gaat sneller, maar het vakmanschap, de keuzes en de verantwoordelijkheid blijven bij de mens. Je hoeft er zelf niets van te kennen; wij spreken je taal en leggen elke keuze uit.</p></div>
+      <div class="ai-blok"><h3>AI zit in de software waar het nuttig is</h3><p>Een document herkennen, een mail omzetten in een geboekte zaal: daar is AI sterk in, en daar zetten we het in. Altijd met een menselijke bevestigingsstap waar het ertoe doet, altijd controleerbaar. En altijd nuchter: we gebruiken AI waar het waarde toevoegt, niet omdat het blinkt. Dat is ook voor de planeet de eerlijkste keuze.</p></div>
+      <div class="ai-blok"><h3>Beslissingen blijven bij mensen en regels</h3><p>Wie welke vergoeding krijgt, wie in welke groep komt, wat goedgekeurd wordt: dat beslist geen taalmodel. Dat doen jullie regels, vastgelegd in heldere logica, en jullie mensen. En nee, dit vervangt je collega's niet. Het vervangt het werk waar ze nooit voor gekozen hebben.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sectie-illu">
+    <div>
+    <h2>Veilig en voor iedereen</h2>
+    <div class="veilig">
+      <div><h3>Jullie gegevens, goed behandeld</h3><p>We werken GDPR-conform en kiezen bewust voor Europese hosting en leveranciers waar dat kan. Gevoelige gegevens verlaten jullie omgeving niet zonder doordachte reden en duidelijke afspraak.</p></div>
+      <div><h3>Bruikbaar voor iedereen</h3><p>Wat we bouwen moet werken voor élke eindgebruiker: ook wie slecht ziet, wie niet digitaal sterk is, wie alles op een telefoon doet. We testen het, we beweren het niet alleen.</p></div>
+      <div><h3>Gebouwd om lang mee te gaan</h3><p>Lichte, onderhoudbare software zonder toeters die niemand vroeg. Goed voor jullie budget, goed voor de planeet, en goed voor de collega die het over vijf jaar moet beheren.</p></div>
+    </div>
+    </div>
+    <div class="illu-kolom"><img src="assets/wereldbol-roze.svg" alt=""></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="verbinding">
+      <p>Bouw je aan een groter platform, een ledenomgeving of een digitaal product voor je publiek? Dan is onze <a href="#"><strong>digital product studio</strong></a> je gids. Deze pagina gaat over de kleinere processen daaronder, die nooit aan de beurt kwamen. Allebei met dezelfde mensen, dezelfde aanpak en dezelfde liefde gebouwd.</p>
+      <a class="btn btn--ghost" href="#">Naar de product studio</a>
+    </div>
+  </div>
+</section>
+
+<section class="sectie-grijs">
+  <div class="wrap twee-kolom">
+    <div>
+      <h2>We beginnen met één dag</h2>
+      <p>Liever eerst voelen of dit iets voor jullie is? Dan beginnen we met één dag samenwerken.</p>
+      <ul class="dag-lijst">
+        <li><strong>Vooraf</strong> vragen we je formulieren, regels en voorbeelden op en bereiden we een eerste versie voor.</li>
+        <li><strong>In de voormiddag</strong> brengen we met jouw team het hele proces in kaart, van eerste invoer tot laatste handtekening.</li>
+        <li><strong>In de namiddag</strong> toetsen we samen een werkend prototype met jullie regels erin.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:1rem">Wat je die dag sowieso meeneemt</h3>
+      <p>Een blueprint van je proces, een werkend prototype, en een eerlijk advies. Ook als dat advies is dat je dit niet moet laten bouwen. Daarna beslis je zelf hoe het verder gaat.</p>
+      <a class="btn btn--primary" href="#contact">Plan een eerste gesprek</a>
+      <div style="margin-top:2rem;"><img src="assets/events-groen.svg" alt="" style="width:100%; max-width:280px; height:auto;"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Aan het werk</h2>
+    <div class="cases">
+      <div class="case"><div class="tag">Overheid</div><h3>CTRG</h3><p>Van 500 Excels per kwartaal naar één formulier dat fouten tegenhoudt voor ze vertrekken.</p><a href="#">Meer lezen &rarr;</a></div>
+      <div class="case placeholder"><div class="tag">Onderwijs &amp; zorg</div><h3>Icho</h3><p>Huisartsen in opleiding slim verdelen over stageplaatsen en intervisiegroepen. Volgt binnenkort.</p></div>
+      <div class="case"><div class="tag">Non-profit</div><h3>Bestaande Statik-case</h3><p>Nog te kiezen uit de 64 projecten op /projecten.</p><a href="#">Meer lezen &rarr;</a></div>
+      <div class="case"><div class="tag">Cultuur</div><h3>Bestaande Statik-case</h3><p>Nog te kiezen uit de 64 projecten op /projecten.</p><a href="#">Meer lezen &rarr;</a></div>
+    </div>
+    <blockquote class="quote">"Hier komt de testimonial van een klant, zodra die er is. Bijvoorbeeld over de workshopdag bij CTRG."<span class="bron">Naam, organisatie</span></blockquote>
+  </div>
+</section>
+
+<section class="sectie-zwart slot" id="contact">
+  <div class="wrap">
+    <h2>Welk proces vreet bij jullie de meeste tijd?</h2>
+    <p>Vertel het ons, of beter nog: stuur ons je rommeligste Excel. We vertellen je eerlijk of het oplosbaar is, en grote kans dat we het al eens gezien hebben. Een positieve impact maken we het liefst samen.</p>
+    <a class="btn btn--primary" href="mailto:hallo@statik.be">Laten we samenwerken</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-grid" style="align-items:center;">
+    <span style="display:flex; align-items:center; gap:.75rem;"><img src="assets/statik-logo.svg" alt="Statik" style="height:26px; width:auto;"> Want morgen begint vandaag.</span>
+    <span style="display:flex; align-items:center; gap:1.5rem;">
+      <img src="assets/tkk-label-statik-nl.svg" alt="Statik is onderdeel van The Kind Kids" style="height:48px; width:auto;">
+      <img src="assets/bcorp-logo.png" alt="B Corp gecertificeerd" style="height:56px; width:auto;">
+    </span>
+    <span>Mockup variant B (AI eerst) · intern gebruik</span>
+  </div>
+</footer>
+
+</body>
+</html>
