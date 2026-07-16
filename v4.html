@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procesoptimalisatie met AI | Statik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --geel: #FECE00;
+    --blauw: #005C98;
+    --lichtblauw: #ACE3FE;
+    --groen: #29AE81;
+    --koraal: #FE8F71;
+    --roodoranje: #FE3000;
+    --tekst: #333333;
+    --grijs: #F9F9F9;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Jost', sans-serif; color: var(--tekst); background: #fff; line-height: 1.6; font-size: 1.0625rem; }
+  h1, h2, h3 { font-weight: 400; line-height: 1.15; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.125rem); margin-bottom: 1rem; }
+  h2 { font-size: clamp(1.6rem, 3.5vw, 2.1875rem); margin-bottom: 1.25rem; }
+  h3 { font-size: 1.25rem; font-weight: 500; margin-bottom: .5rem; }
+  p { margin-bottom: 1rem; }
+  a { color: var(--blauw); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+  .smal { max-width: 720px; }
+
+  .kicker { font-size: .85rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--blauw); margin-bottom: .75rem; }
+
+  .btn { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.625rem; border-radius: 9999px; border: 1px solid #000; padding: .5rem 1.5rem; font-size: 1rem; font-weight: 600; letter-spacing: .025em; text-decoration: none; transition: all .2s ease-in-out; cursor: pointer; color: #000; }
+  .btn--primary { background: #000; color: #fff; }
+  .btn--primary:hover { background: var(--geel); color: #000; border-color: var(--geel); }
+  .btn--geel { background: var(--geel); color: #000; border-color: var(--geel); }
+  .btn--geel:hover { background: #000; color: #fff; border-color: #000; }
+  .btn--ghost { background: transparent; color: #000; }
+  .btn--ghost:hover { background: #000; color: #fff; }
+  .cta-rij { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-top: 1.75rem; }
+
+  header { position: sticky; top: 0; background: #fff; z-index: 50; border-bottom: 1px solid #eee; }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; max-width: 1240px; margin: 0 auto; }
+  .menu { display: flex; gap: 1.75rem; align-items: center; list-style: none; }
+  .menu a { color: var(--tekst); text-decoration: none; font-size: 1rem; }
+  .menu a:hover { color: #000; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--geel); text-decoration-thickness: 3px; }
+  @media (max-width: 820px) { .menu li:not(:last-child) { display: none; } }
+
+  .hero { padding: 4.5rem 0 3.5rem; }
+  .hero .sub { display: inline; font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 500; background: linear-gradient(transparent 55%, var(--geel) 55%, var(--geel) 92%, transparent 92%); padding: 0 .15em; }
+  .hero .intro { margin-top: 1.5rem; max-width: 560px; font-size: 1.2rem; }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 3rem; align-items: center; }
+  @media (max-width: 820px) { .hero-grid { grid-template-columns: 1fr; } }
+  .hero-visual { position: relative; }
+  .excel-kaart { background: #fff; border: 1px solid #e5e7eb; border-radius: .5rem; padding: 1rem 1.25rem; font-size: .9rem; box-shadow: 0 10px 30px rgba(0,0,0,.08); position: relative; z-index: 1; }
+  .excel-kaart .bestandsnaam { font-weight: 600; display: flex; align-items: center; gap: .5rem; }
+  .excel-kaart .groen-blok { width: 18px; height: 18px; background: #1D6F42; border-radius: 3px; flex: none; }
+  .excel-kaart .meta { color: #888; font-size: .8rem; margin-top: .25rem; }
+  .excel-kaart + .excel-kaart { margin-top: .75rem; }
+  .excel-kaart.gedraaid-l { transform: rotate(-2deg); }
+  .excel-kaart.gedraaid-r { transform: rotate(1.5deg); }
+  .hero-pijl { display: flex; align-items: center; gap: .75rem; margin: 1.1rem 0; font-weight: 600; font-size: .95rem; }
+  .hero-pijl .lijn { flex: 1; height: 3px; background: var(--geel); border-radius: 2px; }
+  .formulier-kaart { background: #fff; border: 2px solid #000; border-radius: .75rem; padding: 1rem 1.25rem; font-size: .9rem; box-shadow: 0 16px 40px rgba(0,0,0,.10); position: relative; z-index: 1; }
+  .formulier-kaart .titel { font-weight: 600; margin-bottom: .5rem; }
+  .mini-veld { border: 1px solid #d1d5db; border-radius: .35rem; padding: .35rem .6rem; margin-bottom: .45rem; color: #666; display: flex; justify-content: space-between; font-size: .85rem; }
+  .mini-veld .vink { color: var(--groen); font-weight: 600; }
+  .ornament { position: absolute; pointer-events: none; z-index: 0; }
+
+  .anker-nav { border-top: 1px solid #eee; border-bottom: 1px solid #eee; background: #fff; }
+  .anker-nav .wrap { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; padding-top: .8rem; padding-bottom: .8rem; }
+  .anker-nav span { font-size: .85rem; color: #888; margin-right: .4rem; }
+  .anker-nav a { font-size: .9rem; font-weight: 500; color: var(--tekst); text-decoration: none; border: 1px solid #ddd; border-radius: 9999px; padding: .25rem .9rem; transition: all .15s; }
+  .anker-nav a:hover { border-color: var(--geel); background: var(--geel); color: #000; }
+
+  /* Vertrouwensstrook: logo's plus de cijfers van het huis */
+  .logo-strip { padding: 2.5rem 0 3rem; }
+  .logo-strip p { font-size: .9rem; text-transform: uppercase; letter-spacing: .08em; color: #888; margin-bottom: 1.25rem; }
+  .logo-strip .logos { display: flex; gap: 3rem; align-items: center; flex-wrap: wrap; }
+  .logo-strip img { height: 44px; width: auto; max-width: 130px; object-fit: contain; filter: grayscale(1); opacity: .65; }
+  .huis-cijfers { display: flex; gap: 2.5rem; flex-wrap: wrap; margin-top: 2rem; padding-top: 1.75rem; border-top: 1px dashed #ddd; }
+  .huis-cijfers div { font-size: .95rem; color: #555; }
+  .huis-cijfers strong { display: block; font-size: 1.5rem; font-weight: 500; color: var(--tekst); line-height: 1.2; }
+
+  section { padding: 4.5rem 0; }
+  .sectie-grijs { background: var(--grijs); }
+  .sectie-blauw { background: var(--lichtblauw); }
+  .sectie-zwart { background: #000; color: #fff; }
+  .sectie-zwart h2 { color: #fff; }
+
+  .kaarten { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+  .kaart { background: #fff; border-radius: 1rem; padding: 1.6rem 1.75rem; border: 1px solid #eee; }
+  .kaart h3 { display: flex; align-items: flex-start; gap: .6rem; font-size: 1.15rem; }
+  .kaart p { margin-bottom: 0; color: #555; }
+  .stip { width: 12px; height: 12px; border-radius: 50%; flex: none; margin-top: .45rem; }
+
+  .tussen-cta { margin-top: 2.5rem; background: #fff; border: 2px solid #000; border-radius: 1rem; padding: 1.5rem 2rem; display: flex; gap: 1.5rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .tussen-cta p { margin: 0; font-size: 1.1rem; max-width: 560px; }
+
+  .vroeger-nu { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 2rem; }
+  @media (max-width: 820px) { .vroeger-nu { grid-template-columns: 1fr; } }
+  .vn-kolom { border-radius: 1rem; padding: 1.75rem 2rem; }
+  .vn-kolom.vroeger { background: var(--grijs); }
+  .vn-kolom.nu { background: #FFF8DC; border: 1px solid var(--geel); }
+  .vn-kolom h3 { font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 1rem; }
+  .vn-kolom ul { list-style: none; }
+  .vn-kolom li { padding: .55rem 0 .55rem 1.6rem; position: relative; border-bottom: 1px dashed #ddd; }
+  .vn-kolom li:last-child { border-bottom: none; }
+  .vn-kolom.vroeger li:before { content: "×"; position: absolute; left: 0; color: #999; font-weight: 600; }
+  .vn-kolom.nu li:before { content: "✓"; position: absolute; left: 0; color: var(--groen); font-weight: 600; }
+  .kernzin { margin: 2.5rem auto 0; max-width: 760px; text-align: center; font-size: clamp(1.4rem, 3vw, 1.8rem); font-weight: 500; line-height: 1.35; }
+  .kernzin em { font-style: normal; background: linear-gradient(transparent 55%, var(--geel) 55%, var(--geel) 92%, transparent 92%); padding: 0 .15em; }
+  .kernzin-payoff { text-align: center; max-width: 640px; margin: 1.25rem auto 0; font-size: 1.15rem; font-weight: 500; }
+  .kernzin-na { text-align: center; max-width: 640px; margin: 1rem auto 0; color: #555; }
+
+  /* Twee producten met het beslismoment ertussen */
+  .producten { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.5rem; margin-top: 2.5rem; align-items: stretch; }
+  @media (max-width: 900px) { .producten { grid-template-columns: 1fr; } }
+  .product-kaart { border-radius: 1rem; padding: 2rem 2.25rem; display: flex; flex-direction: column; }
+  .product-kaart.dag { background: #FFF8DC; border: 1px solid var(--geel); }
+  .product-kaart.bouw { background: #fff; border: 1px solid #ddd; }
+  .product-kop { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .5rem; flex-wrap: wrap; }
+  .product-kop h3 { font-size: 1.4rem; margin: 0; }
+  .product-pil { font-size: .78rem; font-weight: 600; padding: .2rem .8rem; border-radius: 9999px; white-space: nowrap; }
+  .product-kaart.dag .product-pil { background: var(--geel); }
+  .product-kaart.bouw .product-pil { background: var(--grijs); border: 1px solid #ddd; }
+  .product-kaart ul { list-style: none; margin: 1rem 0; }
+  .product-kaart li { padding: .5rem 0 .5rem 1.8rem; position: relative; border-bottom: 1px dashed rgba(0,0,0,.12); }
+  .product-kaart li:last-child { border-bottom: none; }
+  .product-kaart.dag li:before { content: ""; position: absolute; left: 0; top: .95rem; width: 11px; height: 11px; border-radius: 50%; background: var(--geel); border: 1px solid rgba(0,0,0,.25); }
+  .product-kaart.bouw li:before { content: "✓"; position: absolute; left: 0; color: var(--groen); font-weight: 600; }
+  .product-voet { margin-top: auto; padding-top: 1rem; font-size: .95rem; color: #555; }
+  .product-voet p { margin-bottom: 0; }
+  .beslis { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .4rem; padding: 0 .25rem; }
+  .beslis .bol { width: 86px; height: 86px; border-radius: 50%; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; text-align: center; font-size: .8rem; font-weight: 600; line-height: 1.25; padding: .5rem; }
+  .beslis .lijn { flex: 1; width: 2px; background: repeating-linear-gradient(#bbb 0 6px, transparent 6px 12px); min-height: 30px; }
+  @media (max-width: 900px) { .beslis { flex-direction: row; } .beslis .lijn { height: 2px; width: auto; flex: 1; min-height: 0; background: repeating-linear-gradient(90deg, #bbb 0 6px, transparent 6px 12px); } }
+  .aanpak-naschrift { margin: 2.25rem auto 0; max-width: 720px; text-align: center; color: #555; }
+  .aanpak-naschrift p { margin-bottom: 0; }
+
+  .case-flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 1rem; align-items: stretch; margin-top: 2.25rem; }
+  @media (max-width: 900px) { .case-flow { grid-template-columns: 1fr; } }
+  .case-stap { background: #fff; border: 1px solid #eee; border-radius: 1rem; padding: 1.6rem 1.75rem; }
+  .case-stap.resultaat { background: #FFF8DC; border: 2px solid #000; }
+  .case-stap .stap-label { font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--blauw); display: block; margin-bottom: .9rem; }
+  .case-stap.resultaat .stap-label { color: #000; }
+  .case-stap .stap-cijfer { font-size: 3.4rem; font-weight: 500; line-height: 1; display: block; margin-bottom: .6rem; }
+  .case-stap p { margin: 0; color: #555; }
+  .case-pijl { display: flex; align-items: center; justify-content: center; }
+  .case-pijl i { position: relative; width: 26px; height: 4px; background: var(--geel); border-radius: 2px; display: block; }
+  .case-pijl i:after { content: ""; position: absolute; right: -9px; top: -6px; border-left: 11px solid var(--geel); border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
+  @media (max-width: 900px) { .case-pijl { transform: rotate(90deg); padding: .8rem 0; } }
+  .case-onder { display: grid; grid-template-columns: 1.05fr .95fr; gap: 3rem; align-items: center; margin-top: 2.75rem; }
+  @media (max-width: 820px) { .case-onder { grid-template-columns: 1fr; } }
+  .schermafdruk { background: #fff; border-radius: .75rem; border: 1px solid #ddd; overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,.10); }
+  .schermafdruk .balk { background: #f3f4f6; padding: .5rem .9rem; display: flex; gap: .4rem; border-bottom: 1px solid #e5e7eb; }
+  .schermafdruk .balk i { width: 10px; height: 10px; border-radius: 50%; background: #d1d5db; display: block; }
+  .schermafdruk .inhoud { padding: 1.5rem; font-size: .95rem; }
+  .veld { border: 1px solid #d1d5db; border-radius: .35rem; padding: .55rem .7rem; margin-bottom: .6rem; color: #666; display: flex; justify-content: space-between; }
+  .veld.fout { border-color: var(--roodoranje); background: #fff5f2; color: var(--roodoranje); }
+  .veld.ok { border-color: var(--groen); }
+  .veld .vink { color: var(--groen); font-weight: 600; }
+  .schermafdruk-onderschrift { font-size: .9rem; color: #444; margin-top: .9rem; margin-bottom: 0; }
+
+  .faq { max-width: 820px; margin-top: 2rem; }
+  .faq-item { background: #fff; border: 1px solid #eee; border-radius: 1rem; margin-bottom: .75rem; overflow: hidden; }
+  .faq-item summary { list-style: none; cursor: pointer; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-size: 1.15rem; font-weight: 500; }
+  .faq-item summary::marker { content: ""; }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary:hover .plus { background: #000; }
+  .faq-item summary:hover .plus:before, .faq-item summary:hover .plus:after { background: var(--geel); }
+  .plus { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--geel); position: relative; transition: all .2s ease-in-out; }
+  .plus:before, .plus:after { content: ""; position: absolute; background: #000; transition: background .2s; }
+  .plus:before { width: 14px; height: 2px; left: 8px; top: 14px; }
+  .plus:after { width: 2px; height: 14px; left: 14px; top: 8px; }
+  details[open] .plus { transform: rotate(45deg); }
+  .faq-item > p { padding: 0 3.5rem 1.4rem 1.5rem; margin: 0; color: #555; }
+
+  .verbinding { border: 2px solid #000; border-radius: 1rem; padding: 2rem 2.25rem; display: flex; gap: 2rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .verbinding p { margin: 0; max-width: 620px; }
+
+  .cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+  .case { background: #fff; border-radius: 1rem; border: 1px solid #eee; padding: 1.75rem; display: flex; flex-direction: column; }
+  .case .tag { font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--blauw); margin-bottom: .6rem; }
+  .case a { margin-top: auto; font-weight: 600; text-decoration: none; }
+  .case a:hover { text-decoration: underline; text-decoration-color: var(--geel); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+  .case.placeholder { background: var(--grijs); color: #777; border-style: dashed; }
+
+  .quote { padding: .5rem 0; font-size: 1.35rem; font-style: italic; max-width: 760px; margin: 3rem auto 0; position: relative; }
+  .quote:before { content: ""; display: block; width: 56px; height: 42px; background: url('assets/quotes-red.svg') no-repeat center / contain; margin-bottom: 1rem; }
+  .quote .bron { display: block; font-size: .95rem; font-style: normal; color: #555; margin-top: .75rem; }
+
+  .slot { text-align: center; padding: 5.5rem 0; }
+  .slot h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+  .slot p { max-width: 620px; margin: 0 auto 2rem; font-size: 1.125rem; }
+  .slot .cta-rij { justify-content: center; }
+  .slot .btn--primary { background: var(--geel); color: #000; border-color: var(--geel); }
+  .slot .btn--primary:hover { background: #fff; border-color: #fff; }
+  .slot .btn--ghost { color: #fff; border-color: #fff; }
+  .slot .btn--ghost:hover { background: #fff; color: #000; }
+
+  footer { background: #fff; border-top: 1px solid #eee; padding: 2.5rem 0; font-size: .95rem; color: #777; }
+  .footer-grid { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a href="#" aria-label="Statik"><img src="assets/statik-logo.svg" alt="Statik" style="height:34px; width:auto; display:block;"></a>
+    <ul class="menu">
+      <li><a href="#">Wat doen we</a></li>
+      <li><a href="#">Ons werk</a></li>
+      <li><a href="#">Ons verhaal</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a class="btn btn--ghost" href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero" style="position:relative; overflow:hidden;">
+  <img class="ornament" src="assets/overview-ornament-tl.svg" alt="" style="top:-120px; left:-140px; width:300px; opacity:.9;">
+  <div class="wrap hero-grid" style="position:relative; z-index:1;">
+    <div>
+      <p class="kicker">Wat doen we &rsaquo; Procesoptimalisatie met AI</p>
+      <h1>Procesoptimalisatie met AI</h1>
+      <p><span class="sub">Te klein voor een IT-project. Tot nu.</span></p>
+      <div class="intro">
+        <p>Dankzij AI is software op maat nu óók haalbaar voor de taaie interne processen die al jaren in Excel blijven hangen. Zo gaan de uren die daar nu in kruipen terug naar het werk waarvoor je organisatie bestaat. <strong>Eerst één werkdag met vaste prijs. Daarna pas beslis je of we bouwen.</strong></p>
+      </div>
+      <div class="cta-rij">
+        <a class="btn btn--primary" href="#aanpak">Zo werkt het</a>
+        <a class="btn btn--ghost" href="#case">Bekijk de case: 500 Excels, één formulier</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="excel-kaart gedraaid-l">
+        <div class="bestandsnaam"><span class="groen-blok"></span>vergoedingen_2026_v7_DEFINITIEF.xlsx</div>
+        <div class="meta">Laatst bewerkt door Marc · 14 tabbladen · 3 verborgen kolommen</div>
+      </div>
+      <div class="excel-kaart gedraaid-r">
+        <div class="bestandsnaam"><span class="groen-blok"></span>subsidiedossier_2026_finaal_echt.xlsx</div>
+        <div class="meta">Deadline over 12 dagen · cijfers uit 4 andere bestanden</div>
+      </div>
+      <div class="hero-pijl"><span class="lijn"></span> wordt, dankzij AI <span class="lijn"></span></div>
+      <div class="formulier-kaart">
+        <div class="titel">Eén formulier dat zichzelf controleert</div>
+        <div class="mini-veld">Naam en vergoeding <span class="vink">&#10003;</span></div>
+        <div class="mini-veld">Bedragen kloppen automatisch <span class="vink">&#10003;</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sectie-grijs" id="herken">
+  <div class="wrap">
+    <p class="kicker">Herkenning</p>
+    <h2>Herken je dit?</h2>
+    <p class="smal">Zes vragen. Zie je bij eentje meteen een collega of een bestand voor je? Dan is deze pagina voor jullie geschreven.</p>
+    <div class="kaarten">
+      <div class="kaart"><h3><span class="stip" style="background:var(--geel)"></span>Wie rekent bij jullie alle onkostennota's na?</h3><p>Vrijwilligers dienen kosten in via Excel, elk op een eigen manier, en iemand controleert alles met de hand. Wij bouwen één formulier dat zichzelf controleert.</p></div>
+      <div class="kaart"><h3><span class="stip" style="background:var(--blauw)"></span>In hoeveel versies gaat het subsidiedossier rond?</h3><p>Cijfers overtikken, deadlines bewaken, stukken najagen. Wij bouwen één plek waar het dossier zichzelf opbouwt doorheen het jaar.</p></div>
+      <div class="kaart"><h3><span class="stip" style="background:var(--koraal)"></span>Hoe vaak wordt één inschrijving overgetikt?</h3><p>Van formulier tot bevestiging tot deelnemerslijst tot factuur: vier systemen, vier keer hetzelfde. Wij maken er één doorlopende flow van, met een mens aan het stuur.</p></div>
+      <div class="kaart"><h3><span class="stip" style="background:var(--groen)"></span>Hoeveel dagen kost de planningspuzzel dit jaar?</h3><p>Groepen indelen, stageplaatsen of lokalen toewijzen. Wij bouwen tools die de puzzel leggen volgens jullie regels, en tonen waarom.</p></div>
+      <div class="kaart"><h3><span class="stip" style="background:var(--lichtblauw)"></span>Wie werkt de stapel pdf's weg?</h3><p>Attesten, facturen en aanvragen die binnenkomen als pdf of foto. Software sorteert en leest ze uit, een mens bevestigt.</p></div>
+      <div class="kaart"><h3><span class="stip" style="background:var(--roodoranje)"></span>Welke collega ís de koppeling tussen jullie systemen?</h3><p>Boekhouding, ledenbestand en kalender praten niet met elkaar, dus doet een mens het. Wij bouwen de bruggen, zodat je alles één keer invoert.</p></div>
+    </div>
+    <div class="tussen-cta">
+      <p><strong>Staat jouw proces er niet tussen?</strong> Stuur ons je rommeligste Excel. We vertellen je eerlijk of het oplosbaar is.</p>
+      <a class="btn btn--primary" href="mailto:hallo@statik.be">Stuur je Excel door</a>
+    </div>
+  </div>
+</section>
+
+<section id="veranderd">
+  <div class="wrap">
+    <p class="kicker">Wat AI veranderde</p>
+    <h2>Dit bleef altijd liggen. Terecht, tot voor kort.</h2>
+    <p class="smal">Niemand laat zo'n proces uit luiheid aanmodderen. Jarenlang was Excel gewoon de redelijke keuze, en iemand in jouw organisatie heeft dat met veel geduld gedragen.</p>
+    <div class="vroeger-nu">
+      <div class="vn-kolom vroeger">
+        <h3>Waarom het bleef liggen</h3>
+        <ul>
+          <li>Standaardsoftware past nooit helemaal bij jullie regels en uitzonderingen</li>
+          <li>Maatwerk was er voor kernsystemen, niet voor onkostennota's</li>
+          <li>Wie toch een offerte vroeg, schrok en deed de lade weer dicht</li>
+        </ul>
+      </div>
+      <div class="vn-kolom nu">
+        <h3>Wat er veranderd is</h3>
+        <ul>
+          <li>Met AI als gereedschap bouwen onze makers in dagen wat vroeger maanden vroeg</li>
+          <li>Software op maat is nu ook haalbaar voor kleine processen</li>
+          <li>Elk uur dat vrijkomt gaat terug naar leden, bezoekers, studenten, burgers</li>
+        </ul>
+      </div>
+    </div>
+    <p class="kernzin">Dankzij AI bestaat de categorie <em>"te klein om op te lossen"</em> niet meer.</p>
+    <p class="kernzin-payoff">De vraag is niet langer óf het kan. Wel wat jouw team doet met de tijd die vrijkomt.</p>
+    <p class="kernzin-na">Wat niet veranderd is: het moeilijkste deel is jouw proces écht begrijpen. De regel die nergens gedocumenteerd staat, de reden waarom kolom F soms leeg is. Daar begint onze aanpak.</p>
+  </div>
+</section>
+
+<section class="sectie-grijs" id="aanpak">
+  <div class="wrap">
+    <p class="kicker">Zo werkt het</p>
+    <h2>Eerst een werkdag. Dan pas een beslissing.</h2>
+    <p class="smal">De werkdag en het bouwtraject zijn twee aparte dingen. Tussen de twee staat maar één iets: jouw beslissing. Je zit dus nergens aan vast.</p>
+
+    <div class="producten">
+      <div class="product-kaart dag">
+        <div class="product-kop">
+          <h3>1 &middot; De werkdag</h3>
+          <span class="product-pil">vaste prijs, vooraf gekend</span>
+        </div>
+        <p style="color:#555;">Wij verdiepen ons vooraf grondig in jullie formulieren, regels en voorbeelden. Op de dag zelf:</p>
+        <ul>
+          <li><strong>Voormiddag:</strong> met jouw team het hele proces in kaart, van eerste invoer tot laatste handtekening. Vaak voor de organisatie zelf al een eyeopener.</li>
+          <li><strong>Namiddag:</strong> een eerste werkende versie, met jullie regels erin en getoetst op jullie echte voorbeelden. Geen slides, iets dat werkt.</li>
+          <li><strong>Je neemt sowieso mee:</strong> een blueprint van je proces, een werkend prototype en een eerlijk advies.</li>
+        </ul>
+        <div class="product-voet">
+          <p>Dat advies bestaat uit voorstellen die elk een ander pijnpunt oplossen, zodat jij kiest wat eerst komt. Als het met minder kan, zeggen we dat. En als bouwen geen goed idee is, zeggen we dat ook.</p>
+        </div>
+      </div>
+
+      <div class="beslis" aria-hidden="true">
+        <span class="lijn"></span>
+        <span class="bol">hier beslis<br>jij</span>
+        <span class="lijn"></span>
+      </div>
+
+      <div class="product-kaart bouw">
+        <div class="product-kop">
+          <h3>2 &middot; Het bouwtraject</h3>
+          <span class="product-pil">alleen als jij dat wil</span>
+        </div>
+        <p style="color:#555;">Beslis je om te bouwen, dan kan dat met een vaste prijs. Niet omdat we gokken, maar omdat de werkdag de onbekenden al heeft weggewerkt.</p>
+        <ul>
+          <li>Gebouwd in weken, niet maanden</li>
+          <li>Getest bij je echte eindgebruikers: ook de vrijwilliger van 67 die alles op een tablet doet</li>
+          <li>Live, met opleiding en documentatie erbij</li>
+          <li>Code, data en kennis zijn van jullie</li>
+        </ul>
+        <div class="product-voet">
+          <p>Daarna kies je opnieuw: op eigen kracht verder, of met ons als vaste partner in de buurt. Allebei prima. En wie de werkdag deed, betaalt die niet dubbel: het bedrag wordt verrekend in het bouwtraject.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="aanpak-naschrift">
+      <p>Eerlijk is eerlijk: sommige processen zijn na één werkdag helder, andere (grote verdeelpuzzels, koppelingen tussen systemen) vragen een paar rondes. Wat nooit verandert: <strong>je ziet elke stap iets werken, en je beslist pas daarna.</strong></p>
+    </div>
+
+    <div class="tussen-cta" style="margin-top:2.5rem;">
+      <p><strong>Klaar om die lade nog eens open te trekken?</strong> Begin met een gesprek, of meteen met een werkdag.</p>
+      <a class="btn btn--primary" href="#contact">Plan een werkdag</a>
+    </div>
+  </div>
+</section>
+
+<section class="sectie-blauw" id="case">
+  <div class="wrap">
+    <p class="kicker">Case &middot; Centrale Toezichtsraad voor het Gevangeniswezen</p>
+    <h2>Van 500 Excels naar één formulier</h2>
+    <p class="smal">Eén jurist, 500 Excels en een kwartaalritueel dat niemand nog in vraag stelde. Tot één werkdag het omdraaide.</p>
+
+    <div class="case-flow">
+      <div class="case-stap">
+        <span class="stap-label">Elk kwartaal</span>
+        <span class="stap-cijfer">500</span>
+        <p>Excels met zitpenningen en reiskosten, van vrijwilligers uit 37 commissies. Elk met andere tabbladen, andere formules, andere gewoontes.</p>
+      </div>
+      <div class="case-pijl" aria-hidden="true"><i></i></div>
+      <div class="case-stap">
+        <span class="stap-label">Dan het natellen</span>
+        <span class="stap-cijfer">8</span>
+        <p>werkdagen controleert één jurist alles met de hand. Elk kwartaal opnieuw, vier keer per jaar.</p>
+      </div>
+      <div class="case-pijl" aria-hidden="true"><i></i></div>
+      <div class="case-stap resultaat">
+        <span class="stap-label">Na één werkdag met ons</span>
+        <span class="stap-cijfer">1</span>
+        <p>formulier met de echte rekenregels erin, dat fouten tegenhoudt voor ze vertrekken in plaats van ze achteraf op te sporen.</p>
+      </div>
+    </div>
+
+    <div class="case-onder">
+      <div>
+        <p>Op één werkdag brachten we met het team het hele proces in kaart, van eerste invoer tot laatste handtekening. Diezelfde avond stond dit werkende prototype er, getoetst op hun echte voorbeelden.</p>
+        <p><strong>Zodat die acht dagen per kwartaal terug kunnen naar het werk waarvoor de raad bestaat: toezicht houden, niet natellen.</strong></p>
+        <div class="cta-rij">
+          <a class="btn btn--primary" href="#contact">Plan zo'n werkdag</a>
+          <a class="btn btn--ghost" href="#">Lees de hele case</a>
+        </div>
+      </div>
+      <div>
+        <div class="schermafdruk" aria-hidden="true">
+          <div class="balk"><i></i><i></i><i></i></div>
+          <div class="inhoud">
+            <p style="font-weight:600; margin-bottom:.75rem;">Kostenformulier zitpenningen · Q1</p>
+            <div class="veld ok">Naam en commissie <span class="vink">&#10003;</span></div>
+            <div class="veld ok">Zitpenningen: 2 vergaderingen <span class="vink">&#10003;</span></div>
+            <div class="veld fout">Reiskosten: datum ontbreekt</div>
+            <div class="veld">Verklaring op eer</div>
+            <p style="margin:0; color:#888;">Indienen kan pas als alles klopt.</p>
+          </div>
+        </div>
+        <p class="schermafdruk-onderschrift">Het prototype van die avond: indienen kan pas als alles klopt. Het rekenwerk zit in het formulier zelf, niet meer bij de jurist.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sectie-grijs" id="ai">
+  <div class="wrap">
+    <p class="kicker">Onze kijk op AI</p>
+    <h2>AI versnelt. Mensen beslissen.</h2>
+    <p class="smal">Software die met AI gebouwd wordt, roept vragen op. Terecht. Dit zijn de vier die we het vaakst horen, met ons eerlijke antwoord.</p>
+    <div class="faq">
+      <details class="faq-item" open>
+        <summary>Snel gebouwd met AI: is dat geen wegwerpsoftware?<span class="plus" aria-hidden="true"></span></summary>
+        <p>Nee. AI versnelt het werk, maar onze makers ontwerpen, controleren en testen alles zelf, ook bij echte eindgebruikers die slecht zien of alles op een tablet doen. Gebouwd op dezelfde standaarden als onze grote platformen: licht, onderhoudbaar en gemaakt om jaren mee te gaan. Goed voor jullie budget én de planeet.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Waar gaan onze gegevens naartoe?<span class="plus" aria-hidden="true"></span></summary>
+        <p>Nergens zonder duidelijke afspraak. GDPR-conform, bewust Europese hosting waar dat kan, en gevoelige gegevens van leden of vrijwilligers verdwijnen niet zomaar in een AI-model. Ook je DPO mag streng zijn.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Beslist AI straks over onze mensen?<span class="plus" aria-hidden="true"></span></summary>
+        <p>Nee. Wie welke vergoeding krijgt of wat goedgekeurd wordt, beslist geen taalmodel. Dat doen jullie regels, vastgelegd in heldere logica die je kan nakijken, en jullie mensen. Waar AI in de software zelf werk doet, zoals een document uitlezen, bevestigt een mens waar het ertoe doet.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Komt dit in de plaats van collega's?<span class="plus" aria-hidden="true"></span></summary>
+        <p>Het komt in de plaats van het werk waar ze nooit voor kozen: natellen, overtikken, versies najagen. De uren die vrijkomen gaan terug naar leden, bezoekers, studenten en burgers. Dat is het hele punt.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0; padding-bottom:0;">
+  <div class="wrap" style="padding-top:4.5rem; padding-bottom:4.5rem;">
+    <div class="verbinding">
+      <p>Bouw je aan een groter platform, een ledenomgeving of een digitaal product voor je publiek? Dan is onze <a href="#"><strong>digital product studio</strong></a> je gids. Deze pagina gaat over de kleinere processen daaronder, die nooit aan de beurt kwamen.</p>
+      <a class="btn btn--ghost" href="#">Naar de product studio</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap" style="padding-top:0;">
+    <p class="kicker">Aan het werk</p>
+    <h2>Wat we al bouwden</h2>
+    <div class="cases">
+      <div class="case"><div class="tag">Overheid</div><h3>CTRG</h3><p>Van 500 Excels per kwartaal naar één formulier dat fouten tegenhoudt voor ze vertrekken.</p><a href="#">Meer lezen &rarr;</a></div>
+      <div class="case placeholder"><div class="tag">Onderwijs &amp; zorg</div><h3>Icho</h3><p>Huisartsen in opleiding slim verdelen over stageplaatsen en seminariegroepen. Volgt binnenkort.</p></div>
+      <div class="case"><div class="tag">Non-profit</div><h3>Bestaande Statik-case</h3><p>Nog te kiezen uit de 64 projecten op /projecten.</p><a href="#">Meer lezen &rarr;</a></div>
+      <div class="case"><div class="tag">Cultuur</div><h3>Bestaande Statik-case</h3><p>Nog te kiezen uit de 64 projecten op /projecten.</p><a href="#">Meer lezen &rarr;</a></div>
+    </div>
+    <blockquote class="quote">"Hier komt de testimonial van een klant, zodra die er is. Bijvoorbeeld over de werkdag bij CTRG."<span class="bron">Naam, organisatie</span></blockquote>
+  </div>
+</section>
+
+<section class="sectie-zwart slot" id="contact">
+  <div class="wrap">
+    <h2>Welk proces vreet bij jullie de meeste tijd?</h2>
+    <p>Vertel het ons, of beter nog: stuur ons je rommeligste Excel. We vertellen je eerlijk of het oplosbaar is, en grote kans dat we het al eens gezien hebben.</p>
+    <div class="cta-rij">
+      <a class="btn btn--primary" href="mailto:hallo@statik.be">Laten we samenwerken</a>
+      <a class="btn btn--ghost" href="mailto:hallo@statik.be?subject=Mijn%20rommeligste%20Excel">Stuur je Excel door</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-grid" style="align-items:center;">
+    <span style="display:flex; align-items:center; gap:.75rem;"><img src="assets/statik-logo.svg" alt="Statik" style="height:26px; width:auto;"> Want morgen begint vandaag.</span>
+    <span style="display:flex; align-items:center; gap:1.5rem;">
+      <img src="assets/tkk-label-statik-nl.svg" alt="Statik is onderdeel van The Kind Kids" style="height:48px; width:auto;">
+      <img src="assets/bcorp-logo.png" alt="B Corp gecertificeerd" style="height:56px; width:auto;">
+    </span>
+    <span>Mockup V4.1 · kijk op AI als uitklapbare faq, case als verhaal in drie stappen</span>
+  </div>
+</footer>
+
+</body>
+</html>

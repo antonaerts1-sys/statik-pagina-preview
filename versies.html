@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Versie-overzicht · Procesoptimalisatie met AI | Statik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --geel: #FECE00;
+    --blauw: #005C98;
+    --lichtblauw: #ACE3FE;
+    --groen: #29AE81;
+    --tekst: #333333;
+    --grijs: #F9F9F9;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Jost', sans-serif; color: var(--tekst); background: var(--grijs); line-height: 1.6; font-size: 1.0625rem; }
+  h1, h2, h3 { font-weight: 400; line-height: 1.15; }
+  h1 { font-size: clamp(2rem, 5vw, 2.9rem); margin-bottom: .75rem; }
+  a { color: var(--blauw); }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 1.5rem; }
+
+  header { background: #fff; border-bottom: 1px solid #eee; }
+  .nav { display: flex; align-items: center; gap: .9rem; padding: 1rem 1.5rem; max-width: 920px; margin: 0 auto; }
+  .nav img { height: 30px; width: auto; display: block; }
+  .nav span { font-size: .95rem; color: #888; }
+
+  .kop { padding: 3.5rem 0 1.5rem; }
+  .kicker { font-size: .85rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--blauw); margin-bottom: .75rem; }
+  .kop p { max-width: 640px; color: #555; }
+
+  .groep-titel { font-size: .85rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #999; margin: 2.5rem 0 1rem; padding-bottom: .6rem; border-bottom: 1px solid #e5e5e5; }
+
+  .lijst { display: flex; flex-direction: column; gap: 1rem; }
+  .kaart { background: #fff; border: 1px solid #eee; border-radius: 1rem; padding: 1.6rem 1.75rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem 1.5rem; align-items: center; transition: box-shadow .15s, border-color .15s; }
+  .kaart:hover { box-shadow: 0 10px 30px rgba(0,0,0,.07); border-color: #ddd; }
+  .kaart.actueel { border: 2px solid #000; }
+  .kaart-kop { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-bottom: .35rem; }
+  .kaart h3 { font-size: 1.3rem; font-weight: 500; }
+  .badge { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; padding: .2rem .7rem; border-radius: 9999px; white-space: nowrap; }
+  .badge.nieuw { background: var(--geel); color: #000; }
+  .badge.datum { background: var(--grijs); border: 1px solid #e5e5e5; color: #777; }
+  .badge.variant { background: var(--lichtblauw); color: var(--blauw); }
+  .kaart p { color: #555; margin: 0; max-width: 620px; }
+  .bestand { font-family: 'Roboto Mono', ui-monospace, monospace; font-size: .8rem; color: #999; margin-top: .5rem; }
+
+  .btn { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.5rem; border-radius: 9999px; border: 1px solid #000; padding: .45rem 1.4rem; font-size: .98rem; font-weight: 600; text-decoration: none; transition: all .2s ease-in-out; color: #000; background: #fff; white-space: nowrap; }
+  .btn:hover { background: #000; color: #fff; }
+  .btn.primair { background: #000; color: #fff; }
+  .btn.primair:hover { background: var(--geel); color: #000; border-color: var(--geel); }
+  @media (max-width: 620px) { .kaart { grid-template-columns: 1fr; } }
+
+  .voet { text-align: center; color: #999; font-size: .9rem; padding: 3rem 0 4rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <img src="assets/statik-logo.svg" alt="Statik">
+    <span>· Procesoptimalisatie met AI</span>
+  </div>
+</header>
+
+<section class="kop">
+  <div class="wrap">
+    <p class="kicker">Werkmap · intern overzicht</p>
+    <h1>Alle versies op een rij</h1>
+    <p>Elke versie van de landingspagina, met wat er per stap veranderde. De bovenste is de meest recente. Klik op "Open" om een versie te bekijken.</p>
+  </div>
+</section>
+
+<div class="wrap">
+
+  <p class="groep-titel">Huidige lijn</p>
+  <div class="lijst">
+
+    <div class="kaart actueel">
+      <div>
+        <div class="kaart-kop">
+          <h3>V5</h3>
+          <span class="badge nieuw">Laatste</span>
+          <span class="badge datum">16 juli 2026</span>
+        </div>
+        <p>Minder commercieel gemaakt. De dealzin uit de hero geschrapt en vervangen door de tijd-belofte, de case staat nu vóór de aanpak, en de werkdag wordt gebracht als manier om je proces te begrijpen in plaats van als instapaanbod.</p>
+        <div class="bestand">v5.html</div>
+      </div>
+      <a class="btn primair" href="v5.html">Open V5 &rarr;</a>
+    </div>
+
+    <div class="kaart">
+      <div>
+        <div class="kaart-kop">
+          <h3>V4.1</h3>
+          <span class="badge datum">16 juli 2026</span>
+        </div>
+        <p>Tijd-narratief als rode draad (de vrijgekomen tijd voor het echte werk), de kijk op AI omgebouwd tot uitklapbare FAQ vanuit de bezorgdheden van de lezer, de case als verhaal in drie stappen, en het "waarom wij"-blok verwijderd.</p>
+        <div class="bestand">v4.html</div>
+      </div>
+      <a class="btn" href="v4.html">Open V4.1 &rarr;</a>
+    </div>
+
+    <div class="kaart">
+      <div>
+        <div class="kaart-kop">
+          <h3>V3.3</h3>
+          <span class="badge datum">14 juli 2026</span>
+        </div>
+        <p>Propositie-versie. Titel "Procesoptimalisatie met AI", herkenningskaarten als vragen, werkdag en bouwtraject als twee producten met het beslismoment ertussen.</p>
+        <div class="bestand">v3.html</div>
+      </div>
+      <a class="btn" href="v3.html">Open V3.3 &rarr;</a>
+    </div>
+
+    <div class="kaart">
+      <div>
+        <div class="kaart-kop">
+          <h3>V2</h3>
+          <span class="badge datum">juli 2026</span>
+        </div>
+        <p>Eerste herwerking na de UX-feedback van Ashley: kortere hero, ankernavigatie, CTA's op elk beslismoment en concrete pijn-titels op de kaarten.</p>
+        <div class="bestand">v2.html</div>
+      </div>
+      <a class="btn" href="v2.html">Open V2 &rarr;</a>
+    </div>
+
+  </div>
+
+  <p class="groep-titel">Eerste verkenningen</p>
+  <div class="lijst">
+
+    <div class="kaart">
+      <div>
+        <div class="kaart-kop">
+          <h3>Variant A · proces-eerst</h3>
+          <span class="badge variant">verkenning</span>
+        </div>
+        <p>De eerste klikbare mockup, opgebouwd vanuit het proces (de Excel als beeld) en pas daarna AI.</p>
+        <div class="bestand">index.html</div>
+      </div>
+      <a class="btn" href="index.html">Open variant A &rarr;</a>
+    </div>
+
+    <div class="kaart">
+      <div>
+        <div class="kaart-kop">
+          <h3>Variant B · AI-eerst</h3>
+          <span class="badge variant">verkenning</span>
+        </div>
+        <p>De tegenhanger die vanuit AI vertrekt: hypothese dat organisaties afhaken als ze niet meteen zien dat AI dit mogelijk maakt.</p>
+        <div class="bestand">variant-ai.html</div>
+      </div>
+      <a class="btn" href="variant-ai.html">Open variant B &rarr;</a>
+    </div>
+
+  </div>
+
+</div>
+
+<p class="voet">Statik · onderdeel van The Kind Kids · intern werkoverzicht</p>
+
+</body>
+</html>

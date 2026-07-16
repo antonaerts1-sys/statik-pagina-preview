@@ -3,3 +3,5 @@ copy*.md
 campagne.md
 .claude/
 _assets-overzicht.html
+.DS_Store
+**/.DS_Store
