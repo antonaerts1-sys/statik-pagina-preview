@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaarwel, Excel &middot; Zomerwedstrijd van Statik</title>
+<style>
+__STIJL__
+
+/* ---- Alleen voor deze pagina ---- */
+
+.kop-regel { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 3rem; }
+.kop-regel .rechts { font-size: .95rem; }
+
+/* Hero: kop, één belofte, één alinea, één knop. Verder niets op kleur. */
+.hero-belofte {
+  font-family: "GTFlexa Condensed", sans-serif;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  line-height: 1.02;
+  text-transform: uppercase;
+  margin: 1.5rem 0 1.5rem;
+  max-width: 20ch;
+}
+.hero-tekst { max-width: 46ch; }
+.hero-knop { margin-top: 1.75rem; }
+.hero-klein { margin: 1.5rem 0 0; max-width: 46ch; }
+
+/* Wat we doen: lopende tekst links, een uitroep in handschrift rechts */
+.doen-grid { display: grid; gap: 2.5rem; align-items: center; }
+@media (min-width: 950px) { .doen-grid { grid-template-columns: 1.25fr .75fr; gap: 4rem; } }
+.doen-grid > * { min-width: 0; }
+.doen-tekst { max-width: 58ch; }
+
+/* Herkenningskaarten */
+.kaarten { display: grid; gap: 1.5rem; margin-top: 2.5rem; }
+@media (min-width: 700px) { .kaarten { grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; } }
+.kaarten > * { min-width: 0; }
+.kaart-kop { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.kaart-kop h3 { margin: 0; }
+.kaarten .tkk-kaart p:last-child { margin-bottom: 0; }
+.herken-na { margin-top: 2.5rem; max-width: 60ch; font-size: 1.25rem; line-height: 1.9rem; }
+
+/* Vragen: dezelfde open-en-dicht-lijst als op de projectpagina */
+.vraag { border-top: 1px solid var(--tkk-zwart); max-width: 820px; }
+.vraag:last-of-type { border-bottom: 1px solid var(--tkk-zwart); }
+.vraag summary {
+  list-style: none; cursor: pointer; position: relative;
+  padding: 1.4rem 2.5rem 1.4rem 0;
+  font-family: "GTFlexa Condensed", sans-serif;
+  font-size: 1.5rem; line-height: 1.05; text-transform: uppercase;
+}
+.vraag summary::-webkit-details-marker { display: none; }
+.vraag summary::after {
+  content: "+"; position: absolute; right: .25rem; top: 1.15rem;
+  font-family: "GTFlexa Condensed", sans-serif; font-size: 1.8rem; line-height: 1;
+}
+.vraag[open] summary::after { content: "\2013"; }
+.vraag .antwoord { padding: 0 0 1.75rem; max-width: 68ch; }
+.vraag .antwoord p:last-child { margin-bottom: 0; }
+.vragen { margin-top: 2.5rem; }
+
+/* Formulier */
+.form-grid { display: grid; gap: 2.5rem; margin-top: 2.5rem; align-items: start; }
+@media (min-width: 900px) { .form-grid { grid-template-columns: 1.1fr .9fr; gap: 4rem; } }
+.form-grid > * { min-width: 0; }
+.form-kaart { background: var(--tkk-wit); border: 1px solid var(--tkk-zwart); border-radius: var(--tkk-radius-klein); padding: 2rem; }
+@media (min-width: 700px) { .form-kaart { padding: 2.5rem; } }
+.veld { margin-bottom: 1.5rem; }
+.veld label {
+  display: block; margin-bottom: .5rem;
+  font-family: "GTFlexa Condensed", sans-serif;
+  font-size: 1.1rem; letter-spacing: .04em; text-transform: uppercase;
+}
+.veld input, .veld select, .veld textarea {
+  width: 100%; font-family: "GTFlexa", sans-serif; font-size: 1.0625rem;
+  color: var(--tkk-zwart); background: var(--tkk-wit);
+  border: 1px solid var(--tkk-zwart); border-radius: 10px;
+  padding: .75rem .9rem;
+}
+.veld textarea { min-height: 130px; resize: vertical; line-height: 1.6rem; }
+.veld input:focus, .veld select:focus, .veld textarea:focus { outline: 2px solid var(--tkk-zwart); outline-offset: 1px; }
+.veld .hint { margin: .5rem 0 0; }
+.form-voet { margin: 1.25rem 0 0; }
+.form-zij .los { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--tkk-zwart); }
+.form-zij p:last-child { margin-bottom: 0; }
+
+/* Afsluiter */
+.colofon { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem 2.5rem; flex-wrap: wrap; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--tkk-zwart); }
+.colofon img { height: 48px; width: auto; display: block; }
+.colofon p { margin: 0; max-width: 46ch; }
+</style>
+</head>
+<body>
+
+<!-- ===================== HERO ===================== -->
+<div class="tkk-sectie tkk-sectie--groen">
+  <div class="kop-regel">
+    <span class="tkk-ovaal">Statik</span>
+    <span class="rechts">Meedoen kan tot en met 30 september 2026</span>
+  </div>
+
+  <p class="tkk-kicker">Zomerwedstrijd van Statik</p>
+  <h1>Vaarwel, Excel.</h1>
+  <p class="hero-belofte">Wij lossen deze zomer drie rommelige processen op.</p>
+
+  <p class="hero-tekst">Er zijn 1001 van die processen die vastlopen in Excels, mailtjes en manueel overtikwerk. Te specifiek voor standaardsoftware, te duur voor maatwerk. Dus bleef het liggen.</p>
+
+  <p class="hero-knop"><a class="tkk-knop" href="#doemee">Dien je proces in</a></p>
+  <p class="tkk-klein hero-klein">Meedoen is vrijblijvend en kost je een paar minuten.</p>
+</div>
+
+<!-- ===================== WAT WE DOEN ===================== -->
+<div class="tkk-sectie tkk-sectie--wit">
+  <div class="doen-grid">
+    <div class="doen-tekst">
+      <p class="tkk-kicker">Wat we deze zomer doen</p>
+      <h2>AI verandert die rekening</h2>
+      <p>Zo&rsquo;n klein proces oplossen is nu w&eacute;l haalbaar. Om dat te bewijzen, en omdat we graag organisaties steunen die van de wereld een betere plek maken, kiezen we deze zomer drie van die processen en lossen ze op.</p>
+      <p>Voor elk: een werkdag met je team en een werkende oplossing, <strong>op onze rekening</strong>.</p>
+    </div>
+    <div class="tkk-marker">
+      <p>Wij lossen<br>er <u>drie</u> op</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== HERKEN JE DIT ===================== -->
+<div class="tkk-sectie tkk-sectie--licht">
+  <p class="tkk-kicker">Wat bedoelen we met rommelig?</p>
+  <h2>Herken je zo&rsquo;n proces?</h2>
+  <p style="max-width:60ch">Het gaat niet om &eacute;&eacute;n slordig bestand. Het gaat om een proces dat blijft haperen omdat het uit losse stukken bestaat die iemand met de hand aan elkaar houdt.</p>
+
+  <div class="kaarten">
+    <div class="tkk-kaart">
+      <div class="kaart-kop"><span class="tkk-sticker tkk-sticker--roze">01</span><h3>Cijfers uit vijf Excels</h3></div>
+      <p>Getallen die elk kwartaal uit een handvol bestanden bij elkaar worden gesprokkeld, en die nooit helemaal kloppen.</p>
+    </div>
+    <div class="tkk-kaart">
+      <div class="kaart-kop"><span class="tkk-sticker tkk-sticker--groen">02</span><h3>Overtikken uit mails</h3></div>
+      <p>Aanvragen die via mail binnenkomen en die iemand met de hand overtikt in een lijst, een kalender of een systeem.</p>
+    </div>
+    <div class="tkk-kaart">
+      <div class="kaart-kop"><span class="tkk-sticker tkk-sticker--blauw">03</span><h3>Zeven versies van hetzelfde</h3></div>
+      <p>Een dossier of document dat rondgaat, waarvan niemand nog weet welke versie nu de juiste is.</p>
+    </div>
+    <div class="tkk-kaart">
+      <div class="kaart-kop"><span class="tkk-sticker tkk-sticker--rood">04</span><h3>De ene collega die het snapt</h3></div>
+      <p>Een planning of berekening die alleen die ene persoon durft aan te raken, en die stilvalt als die op verlof is.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TUSSENMOMENT ===================== -->
+<div class="tkk-sectie tkk-sectie--rood">
+  <h2>Daar draait deze wedstrijd om</h2>
+  <p style="max-width:52ch; margin:0">Te specifiek voor standaardsoftware, te klein voor een groot IT-project. Dus bleef het liggen.</p>
+</div>
+
+<!-- ===================== VRAGEN EN SPELREGELS ===================== -->
+<div class="tkk-sectie tkk-sectie--wit">
+  <p class="tkk-kicker">Goed om te weten</p>
+  <h2>Vragen en spelregels, kort</h2>
+
+  <div class="vragen">
+    <details class="vraag" open>
+      <summary>Moet ik mijn echte bestanden delen?</summary>
+      <div class="antwoord">
+        <p>Nee. Een beschrijving in gewone taal is genoeg. Wil je toch iets tonen, strip dan alle echte gegevens eruit of maak een verzonnen voorbeeld. Wij vragen nooit om namen of persoonsgegevens.</p>
+      </div>
+    </details>
+
+    <details class="vraag">
+      <summary>Wie mag meedoen?</summary>
+      <div class="antwoord">
+        <p>Organisaties die van de wereld een betere plek maken: non-profits, overheden, zorg, cultuur en onderwijs. Precies de plekken waar zulke processen blijven liggen omdat tijd en budget schaars zijn. Twijfel je of jouw organisatie past? Doe gerust mee, wij laten het je weten.</p>
+      </div>
+    </details>
+
+    <details class="vraag">
+      <summary>Hoe kiezen jullie de drie?</summary>
+      <div class="antwoord">
+        <p>Een jury bij Statik kiest, geen loterij. We wegen herkenbaarheid en impact: processen waar zoveel mogelijk andere organisaties zich in herkennen, bij mensen die er echt verschil mee maken.</p>
+      </div>
+    </details>
+
+    <details class="vraag">
+      <summary>Wat win ik precies?</summary>
+      <div class="antwoord">
+        <p>Een werkdag met ons team om je proces volledig in kaart te brengen, en daarna bouwen we er een werkende oplossing voor. Wij nemen dat volledig voor onze rekening. Wat je daarna doet, beslis je zelf en zonder enige verplichting.</p>
+      </div>
+    </details>
+
+    <details class="vraag">
+      <summary>Wat gebeurt er met mijn inzending?</summary>
+      <div class="antwoord">
+        <p>Ze blijft tussen ons. We tonen geen enkele inzending publiek. Alleen van de drie winnaars maken we, in overleg en geanonimiseerd, een verhaal over wat we samen bouwden.</p>
+      </div>
+    </details>
+
+    <details class="vraag">
+      <summary>Tegen wanneer kan ik meedoen?</summary>
+      <div class="antwoord">
+        <p>Meedoen kan tot en met 30 september 2026 en kost je maar een paar minuten. De drie winnaars maken we begin oktober bekend, en de werkdagen plannen we samen in.</p>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===================== DOE MEE ===================== -->
+<div class="tkk-sectie tkk-sectie--licht" id="doemee">
+  <p class="tkk-kicker">Doe mee</p>
+  <h2>Dien je meest rommelige proces in</h2>
+
+  <div class="form-grid">
+    <form class="form-kaart" onsubmit="return false;">
+      <div class="veld">
+        <label for="naam">Je naam</label>
+        <input id="naam" type="text" placeholder="Voor- en achternaam">
+      </div>
+      <div class="veld">
+        <label for="org">Organisatie</label>
+        <input id="org" type="text" placeholder="De naam van je organisatie">
+      </div>
+      <div class="veld">
+        <label for="sector">Sector</label>
+        <select id="sector">
+          <option value="">Kies je sector</option>
+          <option>Non-profit</option>
+          <option>Overheid</option>
+          <option>Zorg</option>
+          <option>Cultuur</option>
+          <option>Onderwijs</option>
+          <option>Iets anders</option>
+        </select>
+      </div>
+      <div class="veld">
+        <label for="proces">Beschrijf je proces</label>
+        <textarea id="proces" placeholder="Wat loopt er, waar loopt het vast, en hoeveel tijd kost het ongeveer?"></textarea>
+        <p class="tkk-klein hint">Geen echte gegevens invullen. Een gestript of verzonnen voorbeeld mag, maar hoeft niet.</p>
+      </div>
+      <div class="veld">
+        <label for="mail">Je e-mailadres</label>
+        <input id="mail" type="email" placeholder="Waar we je kunnen bereiken">
+      </div>
+      <button class="tkk-knop" type="submit">Doe mee</button>
+      <p class="tkk-klein form-voet">We nemen na de deadline contact met je op, ook als je niet wint.</p>
+    </form>
+
+    <div class="form-zij">
+      <p>Je hoeft niets voor te bereiden. Beschrijf gewoon het proces dat bij jullie het meeste tijd of ergernis kost, en wij bekijken het.</p>
+      <div class="los">
+        <h3>Liever gewoon mailen?</h3>
+        <p>Dat mag ook. Stuur je proces naar <a href="mailto:hallo@statik.be?subject=Mijn%20meest%20rommelige%20proces">hallo@statik.be</a> en we nemen het mee.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== AFSLUITER ===================== -->
+<div class="tkk-sectie tkk-sectie--roze">
+  <div class="tkk-afsluiter">
+    <div>
+      <h2 style="margin-bottom:.5rem">Want morgen begint vandaag</h2>
+      <p style="margin:0; max-width:44ch">Drie processen. Drie werkdagen. Drie organisaties die er deze zomer vanaf zijn.</p>
+    </div>
+    <a class="tkk-knop" href="#doemee">Dien je proces in</a>
+  </div>
+
+  <div class="colofon">
+    <img src="assets/tkk-label-statik-nl.svg" alt="Statik is onderdeel van The Kind Kids">
+    <p class="tkk-klein">Mockup &middot; zomerwedstrijd &ldquo;vaarwel Excel&rdquo; &middot; datums en prijsvorm nog te bevestigen.</p>
+  </div>
+</div>
+
+</body>
+</html>
