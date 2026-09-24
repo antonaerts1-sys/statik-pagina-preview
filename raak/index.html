@@ -43,21 +43,26 @@
 
 <script>
 (function(){
-  var f = document.getElementById('pagina');
+  var f = document.getElementById('pagina'), bezig = false;
+  // De inhoud rekt mee met de hoogte van het kader (min-height 100%), dus eerst
+  // klein maken en dan pas meten, anders krijg je je eigen waarde terug.
   function meet(){
+    if(bezig) return; bezig = true;
     try{
       var d = f.contentDocument;
-      if(!d || !d.body) return;
+      if(!d || !d.body){ bezig = false; return; }
+      f.style.height = '200px';
       var h = Math.max(d.body.scrollHeight, d.documentElement.scrollHeight);
-      if(h > 200) f.style.height = h + 'px';
-    }catch(e){}
+      f.style.height = (h > 400 ? h : 3200) + 'px';
+    }catch(e){ f.style.height = '3200px'; }
+    bezig = false;
   }
   f.addEventListener('load', function(){
     meet();
-    var n = 0, t = setInterval(function(){ meet(); if(++n > 60) clearInterval(t); }, 250);
-    try{ new ResizeObserver(meet).observe(f.contentDocument.documentElement); }catch(e){}
+    var n = 0, t = setInterval(function(){ meet(); if(++n > 20) clearInterval(t); }, 300);
   });
-  window.addEventListener('resize', meet);
+  var wacht;
+  window.addEventListener('resize', function(){ clearTimeout(wacht); wacht = setTimeout(meet, 150); });
 })();
 </script>
 </body></html>
